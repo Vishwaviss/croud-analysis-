@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Crowd Monitoring System</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.5.4/socket.io.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎯 AI Crowd Monitoring System</h1>
+            <div class="header-status">
+                <span class="status-badge" id="connectionStatus">● Disconnected</span>
+                <span class="timestamp" id="timestamp">--:--:--</span>
+            </div>
+        </header>
+
+        <!-- Main Grid -->
+        <main class="main-grid">
+            <!-- Left Column: Video Feed & Controls -->
+            <section class="video-section">
+                <div class="card">
+                    <h2>Live Feed</h2>
+                    <div class="video-container">
+                        <img id="videoFeed" src="/video_feed" alt="Live Video Feed" class="video-feed">
+                        <div class="video-overlay">
+                            <div class="info-badge people-count">
+                                <span class="count-value" id="peopleCount">0</span>
+                                <span class="count-label">People Detected</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls -->
+                <div class="card controls-card">
+                    <h3>Controls</h3>
+                    <div class="control-group">
+                        <label>
+                            <input type="radio" name="input-source" value="webcam" checked>
+                            Webcam
+                        </label>
+                        <label>
+                            <input type="radio" name="input-source" value="upload">
+                            Upload Video
+                        </label>
+                    </div>
+                    <input type="file" id="videoUpload" accept="video/*" style="display:none;">
+                    <button class="btn btn-primary" id="uploadBtn">Choose Video</button>
+                    
+                    <div class="control-group" style="margin-top: 1rem;">
+                        <label>Detection Threshold: <span id="thresholdValue">0.5</span></label>
+                        <input type="range" id="threshold" min="0.1" max="0.9" step="0.1" value="0.5">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Middle Column: Visualizations -->
+            <section class="viz-section">
+                <!-- Heatmap -->
+                <div class="card viz-card">
+                    <h2>Crowd Density Heatmap</h2>
+                    <canvas id="heatmapCanvas" width="400" height="300"></canvas>
+                </div>
+
+                <!-- Statistics -->
+                <div class="card stats-card">
+                    <h3>Live Statistics</h3>
+                    <div class="stats-grid">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Count</span>
+                            <span class="stat-value" id="totalCount">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Density (High/Low)</span>
+                            <span class="stat-value" id="densityLevel">Low</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Avg FPS</span>
+                            <span class="stat-value" id="fpsValue">0</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Anomalies</span>
+                            <span class="stat-value alert-badge" id="anomalies">0</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Charts -->
+            <section class="charts-section">
+                <!-- Scatter Chart -->
+                <div class="card chart-card">
+                    <h2>Detection Scatter Plot</h2>
+                    <canvas id="scatterChart"></canvas>
+                </div>
+
+                <!-- Detected Faces (Suspicious) -->
+                <div class="card faces-card">
+                    <h2>Suspicious Faces</h2>
+                    <div id="facesList" class="faces-list">
+                        <p class="empty-state">No suspicious activity detected</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Alert Panel -->
+        <section class="alert-panel" id="alertPanel">
+            <h3>⚠️ Alerts</h3>
+            <div id="alertsList" class="alerts-list">
+                <p class="empty-state">No alerts</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
